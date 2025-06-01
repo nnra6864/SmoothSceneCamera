@@ -56,25 +56,47 @@ namespace SmoothSceneCamera
         public static SettingsProvider CreateMyPreferencesProvider()
         {
             var provider =
-                new SettingsProvider("Preferences/NnUtils/Smooth Scene Camera", SettingsScope.User)
+                new SettingsProvider("NnUtils/Smooth Scene Camera", SettingsScope.User)
                 {
                     label = "Smooth Scene Camera",
                     guiHandler = _ =>
                     {
+                        var originalIndent = EditorGUI.indentLevel;
+                        EditorGUI.indentLevel = 1;
+                        
+                        EditorGUILayout.Space();
+                        
+                        EditorGUILayout.LabelField("Zoom", EditorStyles.boldLabel);
+
                         EditorGUI.BeginChangeCheck();
 
-                        var useSmoothZoom = EditorGUILayout.Toggle("Smooth Zoom", UseSmoothZoom);
-                        var zoomAmount = EditorGUILayout.FloatField("Zoom Amount", ZoomAmount);
-                        var zoomDistancePower =
-                            EditorGUILayout.FloatField("Zoom Power", ZoomDistancePower);
-                        var zoomDuration =
-                            EditorGUILayout.FloatField("Zoom Duration", ZoomDuration);
-                        var zoomEasing = (Easings.Type)
-                            EditorGUILayout.EnumPopup("Zoom Easing", ZoomEasing);
-                        var nearZoomLimit =
-                            EditorGUILayout.FloatField("Near Zoom Limit", NearZoomLimit);
+                        var useSmoothZoom = EditorGUILayout.Toggle(
+                            new GUIContent("Smooth Zoom",
+                                           "Toggle the smooth zoom option"),
+                            UseSmoothZoom);
+                        var zoomAmount = EditorGUILayout.FloatField(
+                            new GUIContent("Zoom Amount",
+                                           "Amount of zoom per scroll step"),
+                            ZoomAmount);
+                        var zoomDistancePower = EditorGUILayout.FloatField(
+                            new GUIContent("Zoom Distance Power",
+                                           "Power that the distance multiplier is raised to"),
+                            ZoomDistancePower);
+                        var zoomDuration = EditorGUILayout.FloatField(
+                            new GUIContent("Zoom Duration",
+                                           "Duration of the zoom animation"),
+                            ZoomDuration);
+                        var zoomEasing = (Easings.Type)EditorGUILayout.EnumPopup(
+                            new GUIContent("Zoom Easing",
+                                           "Easing applied to the zoom motion"),
+                            ZoomEasing);
+                        var nearZoomLimit = EditorGUILayout.FloatField(
+                            new GUIContent("Near Zoom Limit",
+                                           "Minimum distance to zoom pivot"),
+                            NearZoomLimit);
 
                         if (!EditorGUI.EndChangeCheck()) return;
+                        EditorGUI.indentLevel = originalIndent;
 
                         UseSmoothZoom = useSmoothZoom;
                         ZoomAmount = zoomAmount;
