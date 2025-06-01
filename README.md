@@ -1,5 +1,5 @@
 # Smooth Scene Camera
-This asset brings what every major engine has to Unity: smooth scene camera zoom.
+This asset brings what every major engine has to Unity: **smooth scene camera zoom**.
 
 # Usage
 
