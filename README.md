@@ -1,5 +1,9 @@
+<p align="center">
 # Smooth Scene Camera
+</p>
+
 This asset brings what every major engine has to Unity: 🧈 **smooth scene camera zoom**.
+
 <p align="center">
   <img src="Media/SmoothZoom.gif" alt="Smooth Zoom">
 </p>
