@@ -13,7 +13,10 @@ This asset depends on the [Editor Coroutines](https://docs.unity3d.com/Packages/
 ## Installation
 
 ### Package Manager
-Coming Soon
+Open the Package Manager and add a new **git** package:
+```
+https://github.com/nnra6864/SmoothSceneCamera.git
+```
 
 ### Clone
 You can simply clone this repository into your `Assets` directory:
