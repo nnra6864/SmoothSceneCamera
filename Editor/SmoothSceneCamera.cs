@@ -3,7 +3,7 @@ using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace SmoothSceneCamera
+namespace SmoothSceneCamera.Editor
 {
     [InitializeOnLoad]
     public class SmoothSceneCamera
