@@ -34,6 +34,7 @@ Coming Soon
 ## Customization
 Every aspect of this asset is highly customizable.<br/>
 Open the `Preferences` window and enjoy 😏
+
 ![Preferences](Media/Preferences.png)
 
 ### Settings:
