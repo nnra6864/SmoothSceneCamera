@@ -20,19 +20,78 @@ namespace SmoothSceneCamera
         private const string ZoomAmountKey = "NnUtils_SmoothSceneCamera_ZoomAmount";
         private static float ZoomAmount
         {
-            get => EditorPrefs.GetFloat(ZoomAmountKey, 0.1f);
+            get => EditorPrefs.GetFloat(ZoomAmountKey, 0.25f);
             set => EditorPrefs.SetFloat(ZoomAmountKey, value);
+        }
+
+        private const string ZoomDistancePowerKey = "NnUtils_SmoothSceneCamera_ZoomDistancePower";
+        private static float ZoomDistancePower
+        {
+            get => EditorPrefs.GetFloat(ZoomDistancePowerKey, 0.75f);
+            set => EditorPrefs.SetFloat(ZoomDistancePowerKey, value);
+        }
+
+        private const string ZoomDurationKey = "NnUtils_SmoothSceneCamera_ZoomDuration";
+        private static float ZoomDuration
+        {
+            get => EditorPrefs.GetFloat(ZoomDurationKey, 0.75f);
+            set => EditorPrefs.SetFloat(ZoomDurationKey, value);
+        }
+
+        private const string ZoomEasingKey = "NnUtils_SmoothSceneCamera_ZoomEasing";
+        private static Easings.Type ZoomEasing
+        {
+            get => (Easings.Type)EditorPrefs.GetInt(ZoomEasingKey, (int)Easings.Type.ExpoOut);
+            set => EditorPrefs.SetInt(ZoomEasingKey, (int)value);
+        }
+
+        private const string NearZoomLimitKey = "NnUtils_SmoothSceneCamera_NearZoomLimit";
+        private static float NearZoomLimit
+        {
+            get => EditorPrefs.GetFloat(NearZoomLimitKey, 0.01f);
+            set => EditorPrefs.SetFloat(NearZoomLimitKey, value);
+        }
+
+        [SettingsProvider]
+        public static SettingsProvider CreateMyPreferencesProvider()
+        {
+            var provider =
+                new SettingsProvider("Preferences/NnUtils/Smooth Scene Camera", SettingsScope.User)
+                {
+                    label = "Smooth Scene Camera",
+                    guiHandler = _ =>
+                    {
+                        EditorGUI.BeginChangeCheck();
+
+                        var useSmoothZoom = EditorGUILayout.Toggle("Smooth Zoom", UseSmoothZoom);
+                        var zoomAmount = EditorGUILayout.FloatField("Zoom Amount", ZoomAmount);
+                        var zoomDistancePower =
+                            EditorGUILayout.FloatField("Zoom Power", ZoomDistancePower);
+                        var zoomDuration =
+                            EditorGUILayout.FloatField("Zoom Duration", ZoomDuration);
+                        var zoomEasing = (Easings.Type)
+                            EditorGUILayout.EnumPopup("Zoom Easing", ZoomEasing);
+                        var nearZoomLimit =
+                            EditorGUILayout.FloatField("Near Zoom Limit", NearZoomLimit);
+
+                        if (!EditorGUI.EndChangeCheck()) return;
+
+                        UseSmoothZoom = useSmoothZoom;
+                        ZoomAmount = zoomAmount;
+                        ZoomDistancePower = zoomDistancePower;
+                        ZoomDuration = zoomDuration;
+                        ZoomEasing = zoomEasing;
+                        NearZoomLimit = nearZoomLimit;
+                    }
+                };
+
+            return provider;
         }
 
         #endregion
 
         private static float _lastFrameTime;
         private static float _sizeDelta;
-
-        private static float _zoomDistancePower = 1.15f;
-        private static float _zoomDuration = 1;
-        private static Easings.Type _zoomEasing = Easings.Type.ExpoOut;
-        private static AnimationCurve _zoomCurve;
 
         static SmoothSceneCamera() => SceneView.duringSceneGui += OnSceneGUI;
 
@@ -58,12 +117,19 @@ namespace SmoothSceneCamera
             if (!Mathf.Approximately(Mathf.Sign(dir), Mathf.Sign(_sizeDelta))) _sizeDelta = 0;
 
             var startSize = sceneView.size;
-            _sizeDelta += dir * ZoomAmount * Mathf.Pow(startSize + _sizeDelta, _zoomDistancePower);
-            var targetSize = startSize + _sizeDelta;
+            var prevTargetSize = startSize + _sizeDelta;
+            var targetSize = prevTargetSize +
+                             dir * ZoomAmount *
+                             Mathf.Pow(prevTargetSize, ZoomDistancePower);
+
+            // Clamp the target size and calculate size delta
+            var startSign = Mathf.Sign(startSize);
+            targetSize = Mathf.Clamp(targetSize,
+                                     startSign * NearZoomLimit,
+                                     startSign * Mathf.Infinity);
+            _sizeDelta = targetSize - startSize;
 
             if (_zoomRoutine != null) EditorCoroutineUtility.StopCoroutine(_zoomRoutine);
-
-
             _zoomRoutine = EditorCoroutineUtility.StartCoroutineOwnerless(
                 ZoomRoutine(sceneView, startSize, targetSize));
         }
@@ -74,16 +140,15 @@ namespace SmoothSceneCamera
             SceneView sceneView, float startSize, float targetSize)
         {
             _lastFrameTime = (float)EditorApplication.timeSinceStartup;
-            _zoomCurve ??= AnimationCurve.Linear(0, 0, 1, 1);
             var startSizeDelta = _sizeDelta;
 
             float lerpPos = 0;
             while (lerpPos < 1)
             {
                 var deltaTime = (float)(EditorApplication.timeSinceStartup - _lastFrameTime);
-                lerpPos += deltaTime / _zoomDuration;
+                lerpPos += deltaTime / ZoomDuration;
                 lerpPos = Mathf.Clamp01(lerpPos);
-                var t = _zoomCurve.Evaluate(Easings.Ease(lerpPos, _zoomEasing));
+                var t = Easings.Ease(lerpPos, ZoomEasing);
 
                 UpdateCameraDistance(sceneView, startSize, targetSize, t);
                 _sizeDelta = Mathf.LerpUnclamped(startSizeDelta, 0, t);
@@ -100,30 +165,5 @@ namespace SmoothSceneCamera
             => sceneView.LookAt(sceneView.pivot, sceneView.rotation,
                                 Mathf.LerpUnclamped(startPos, targetPos, t),
                                 sceneView.camera.orthographic, true);
-
-        [SettingsProvider]
-        public static SettingsProvider CreateMyPreferencesProvider()
-        {
-            var provider =
-                new SettingsProvider("Preferences/NnUtils/Smooth Scene Camera", SettingsScope.User)
-                {
-                    label = "Smooth Scene Camera",
-                    guiHandler = _ =>
-                    {
-                        EditorGUI.BeginChangeCheck();
-
-                        var useSmoothZoom = EditorGUILayout.Toggle("Smooth Zoom", UseSmoothZoom);
-                        var zoomAmount = EditorGUILayout.FloatField("Zoom Amount", ZoomAmount);
-
-                        if (EditorGUI.EndChangeCheck())
-                        {
-                            UseSmoothZoom = useSmoothZoom;
-                            ZoomAmount = zoomAmount;
-                        }
-                    }
-                };
-
-            return provider;
-        }
     }
 }
