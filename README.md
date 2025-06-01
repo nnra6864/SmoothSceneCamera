@@ -1,9 +1,12 @@
 # Smooth Scene Camera
-This asset brings what every major engine has to Unity: **smooth scene camera zoom**.
+This asset brings what every major engine has to Unity: 🧈 **smooth scene camera zoom**.
 
 # Usage
 
-## Dependencies
+## Unity Version
+This asset has been developed with Unity 6 but should be backwards compatible.
+
+## Dependencies *(Skip if using the Package Manager)*
 This asset depends on the [Editor Coroutines](https://docs.unity3d.com/Packages/com.unity.editorcoroutines@1.0/manual/index.html), make sure you have it installed.
 
 ## Installation
