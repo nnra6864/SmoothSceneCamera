@@ -48,7 +48,7 @@ namespace SmoothSceneCamera
         private const string NearZoomLimitKey = "NnUtils_SmoothSceneCamera_NearZoomLimit";
         private static float NearZoomLimit
         {
-            get => EditorPrefs.GetFloat(NearZoomLimitKey, 0.01f);
+            get => EditorPrefs.GetFloat(NearZoomLimitKey, 0.0001f);
             set => EditorPrefs.SetFloat(NearZoomLimitKey, value);
         }
 
