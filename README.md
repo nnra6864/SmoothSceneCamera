@@ -1,5 +1,5 @@
 <p align="center">
-# Smooth Scene Camera
+  <h1>Smooth Scene Camera</h1>
 </p>
 
 This asset brings what every major engine has to Unity: 🧈 **smooth scene camera zoom**.
