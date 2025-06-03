@@ -1,6 +1,6 @@
 <h1 align="center">Smooth Scene Camera</h1>
 
-<p align="center">This asset brings what every major engine has to Unity: 🧈 **smooth scene camera zoom**.</p>
+<p align="center">This asset brings what every major engine has to Unity: 🧈 <b>smooth scene camera zoom</b>.</p>
 
 <p align="center">
   <img src="Media/SmoothZoom.gif" alt="Smooth Zoom">
