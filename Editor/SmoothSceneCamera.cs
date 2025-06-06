@@ -20,14 +20,14 @@ namespace SmoothSceneCamera.Editor
         private const string ZoomAmountKey = "NnUtils_SmoothSceneCamera_ZoomAmount";
         private static float ZoomAmount
         {
-            get => EditorPrefs.GetFloat(ZoomAmountKey, 0.25f);
+            get => EditorPrefs.GetFloat(ZoomAmountKey, 0.05f);
             set => EditorPrefs.SetFloat(ZoomAmountKey, value);
         }
 
         private const string ZoomDistancePowerKey = "NnUtils_SmoothSceneCamera_ZoomDistancePower";
         private static float ZoomDistancePower
         {
-            get => EditorPrefs.GetFloat(ZoomDistancePowerKey, 0.75f);
+            get => EditorPrefs.GetFloat(ZoomDistancePowerKey, 1);
             set => EditorPrefs.SetFloat(ZoomDistancePowerKey, value);
         }
 
