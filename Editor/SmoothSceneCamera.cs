@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using System.Collections;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
@@ -187,5 +189,8 @@ namespace SmoothSceneCamera.Editor
             => sceneView.LookAt(sceneView.pivot, sceneView.rotation,
                                 Mathf.LerpUnclamped(startPos, targetPos, t),
                                 sceneView.camera.orthographic, true);
+        
     }
 }
+
+#endif
