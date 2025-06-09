@@ -26,14 +26,18 @@ Open the Package Manager and add a new **git** package:
 https://github.com/nnra6864/SmoothSceneCamera.git
 ```
 
+### Asset Store
+Coming Soon
+
 ### Clone
 You can simply clone this repository into your `Assets` directory:
 ```
 git clone https://github.com/nnra6864/SmoothSceneCamera
 ```
 
-### Asset Store
-Coming Soon
+### Manual
+Head over to [Releases](https://github.com/nnra6864/SmoothSceneCamera/releases) and download the version of your choice.<br/>
+Open the Package Manager, add a new **disk** package and point to `SmoothSceneCamera_X.X.X.unityproject`.
 
 ## Customization
 Every aspect of this asset is highly customizable.<br/>
