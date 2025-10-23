@@ -65,9 +65,9 @@ namespace SmoothSceneCamera.Editor
                     {
                         var originalIndent = EditorGUI.indentLevel;
                         EditorGUI.indentLevel = 1;
-                        
+
                         EditorGUILayout.Space();
-                        
+
                         EditorGUILayout.LabelField("Zoom", EditorStyles.boldLabel);
 
                         EditorGUI.BeginChangeCheck();
@@ -116,6 +116,8 @@ namespace SmoothSceneCamera.Editor
 
         private static float _lastFrameTime;
         private static float _sizeDelta;
+        private static bool _rmbPressed;
+        private static bool _mmbPressed;
 
         static SmoothSceneCamera() => SceneView.duringSceneGui += OnSceneGUI;
 
@@ -124,8 +126,16 @@ namespace SmoothSceneCamera.Editor
             if (!UseSmoothZoom) return;
 
             var e = Event.current;
+            if (e.type is EventType.MouseDown or EventType.MouseUp)
+            {
+                var isDown = e.type == EventType.MouseDown;
+                if (e.button == 1) _rmbPressed = isDown;
+                else if (e.button == 2) _mmbPressed = isDown;
+            }
 
-            if (e.type == EventType.ScrollWheel)
+            if (e.type == EventType.ScrollWheel &&
+                !_rmbPressed && !_mmbPressed &&
+                e.modifiers == EventModifiers.None)
             {
                 Zoom(e.delta.y);
                 e.Use();
@@ -189,7 +199,7 @@ namespace SmoothSceneCamera.Editor
             => sceneView.LookAt(sceneView.pivot, sceneView.rotation,
                                 Mathf.LerpUnclamped(startPos, targetPos, t),
                                 sceneView.camera.orthographic, true);
-        
+
     }
 }
 
