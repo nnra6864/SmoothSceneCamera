@@ -27,7 +27,8 @@ https://github.com/nnra6864/SmoothSceneCamera.git
 ```
 
 ### Asset Store
-Coming Soon
+Smooth Scene Camera is also available on Asset Store:
+https://assetstore.unity.com/packages/slug/322424
 
 ### Clone
 You can simply clone this repository into your `Assets` directory:
